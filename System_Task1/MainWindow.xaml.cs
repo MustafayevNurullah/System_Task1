@@ -23,12 +23,41 @@ namespace System_Task1
     public partial class MainWindow : Window
     {
 
+
+      public static  string ReportFile(string f)
+        {
+            string ReportPath = "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\ReportFile.txt";
+
+            string fileName = Path.GetFileName(f);
+            string[] pathArr = fileName.Split('.');
+            File.Copy(f, "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "." + pathArr[1]);
+            string path = ("\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "Copy." + pathArr[1]);
+            File.Copy(f, path);
+            //
+            FileInfo fi = new FileInfo(f);
+
+
+
+            //Report file
+            File.AppendAllText($"{ReportPath}", "Path" + Environment.NewLine);
+            File.AppendAllText($"{ReportPath}", $"{f}" + Environment.NewLine);
+            File.AppendAllText($"{ReportPath}", "Size" + Environment.NewLine);
+            File.AppendAllText($"{ReportPath}", $"{fi.Length}" + Environment.NewLine);
+
+            File.AppendAllText($"{ReportPath}", "Text" + Environment.NewLine);
+            //
+            return path;
+        }
+
+
+
         static void DirSearch(string sDir,List<string> list)
         {
             string ReportPath= "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\ReportFile.txt";
             string data = String.Empty;
             try
             {
+                //Search File
                 foreach (string d in Directory.GetDirectories(sDir))
                 {
                     foreach (string f in Directory.GetFiles(d))
@@ -41,22 +70,34 @@ namespace System_Task1
                             using (StreamReader sr = new StreamReader(f))
                             {
 
-                                data = sr.ReadToEnd();
+                               data = sr.ReadToEnd();
                             }
-                                  string  fileName = Path.GetFileName(f);
-                                    string[] pathArr = fileName.Split('.');
-                                    File.Copy(f, "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\"+$"{pathArr[0]}"+ DateTime.Now.ToString("ff")+"."+pathArr[1]);
-                                    string path= ("\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "Copy." + pathArr[1]);
-                                    File.Copy(f, path);
-                            FileInfo fi = new FileInfo(f);
-                           File.AppendAllText($"{ReportPath}", "Path" + Environment.NewLine);
-                          File.AppendAllText($"{ReportPath}", $"{f}" + Environment.NewLine);
-                            File.AppendAllText($"{ReportPath}", "Size" + Environment.NewLine);
-                            File.AppendAllText($"{ReportPath}", $"{fi.Length}" + Environment.NewLine);
+                            //        string  fileName = Path.GetFileName(f);
+                            //          string[] pathArr = fileName.Split('.');
 
-                            File.AppendAllText($"{ReportPath}", "Text" + Environment.NewLine);
+                            //  //---------------
+
+                            //  //Crearte copy file 
+                            //  File.Copy(f, "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\"+$"{pathArr[0]}"+ DateTime.Now.ToString("ff")+"."+pathArr[1]);
+                              //        string path= ("\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "Copy." + pathArr[1]);
+                            //          File.Copy(f, path);
+                            //  //
+                            //  FileInfo fi = new FileInfo(f);
 
 
+
+                            //  //Report file
+                            // File.AppendAllText($"{ReportPath}", "Path" + Environment.NewLine);
+                            //File.AppendAllText($"{ReportPath}", $"{f}" + Environment.NewLine);
+                            //  File.AppendAllText($"{ReportPath}", "Size" + Environment.NewLine);
+                            //  File.AppendAllText($"{ReportPath}", $"{fi.Length}" + Environment.NewLine);
+
+                            //  File.AppendAllText($"{ReportPath}", "Text" + Environment.NewLine);
+                            //  //
+
+                          string path= ReportFile(f);
+
+                            //Copy Words
                             foreach (var item in list)
                             {
                             var hasWord = data.Contains(item);
@@ -70,8 +111,7 @@ namespace System_Task1
 
                                 }
                             }
-
-
+                            //
                         }
                     }
                     DirSearch(d,list);
