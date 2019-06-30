@@ -25,6 +25,7 @@ namespace System_Task1
 
         static void DirSearch(string sDir,List<string> list)
         {
+            string ReportPath= "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\ReportFile.txt";
             string data = String.Empty;
             try
             {
@@ -42,23 +43,35 @@ namespace System_Task1
 
                                 data = sr.ReadToEnd();
                             }
+                                  string  fileName = Path.GetFileName(f);
+                                    string[] pathArr = fileName.Split('.');
+                                    File.Copy(f, "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\"+$"{pathArr[0]}"+ DateTime.Now.ToString("ff")+"."+pathArr[1]);
+                                    string path= ("\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "Copy." + pathArr[1]);
+                                    File.Copy(f, path);
+                            FileInfo fi = new FileInfo(f);
+                           File.AppendAllText($"{ReportPath}", "Path" + Environment.NewLine);
+                          File.AppendAllText($"{ReportPath}", $"{f}" + Environment.NewLine);
+                            File.AppendAllText($"{ReportPath}", "Size" + Environment.NewLine);
+                            File.AppendAllText($"{ReportPath}", $"{fi.Length}" + Environment.NewLine);
+
+                            File.AppendAllText($"{ReportPath}", "Text" + Environment.NewLine);
+
+
                             foreach (var item in list)
                             {
                             var hasWord = data.Contains(item);
                             if (hasWord)
                             {
 
-                                  MessageBox.Show("yes");
-                                  string  fileName = Path.GetFileName(f);
-                                    string[] pathArr = fileName.Split('.');
-                                    File.Copy(f, "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\"+$"{pathArr[0]}"+ DateTime.Now.ToString("ff")+"."+pathArr[1]);
-                                    string path= ("\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "Copy." + pathArr[1]);
-                                    File.Copy(f, path);
+                                    File.AppendAllText($"{ReportPath}", $"{item}" + Environment.NewLine);
                                     string text = File.ReadAllText(path);
                                     text = text.Replace($"{item}", $"**{item}**");
                                     File.WriteAllText($"{path}", text);
+
                                 }
                             }
+
+
                         }
                     }
                     DirSearch(d,list);
@@ -92,7 +105,7 @@ namespace System_Task1
                 {
                     List.Add(Name);
                 }
-                DirSearch(@"C:\Users\Must_xm12\source\repos\System_Task12",List);
+                DirSearch("C:\\Users\\Must_xm12\\Downloads", List);
             }
         }
     }
