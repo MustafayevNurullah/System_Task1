@@ -23,7 +23,6 @@ namespace System_Task1
     public partial class MainWindow : Window
     {
 
-
       public static  string ReportFile(string f)
         {
             string ReportPath = "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\ReportFile.txt";
@@ -31,19 +30,15 @@ namespace System_Task1
             string fileName = Path.GetFileName(f);
             string[] pathArr = fileName.Split('.');
             File.Copy(f, "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "." + pathArr[1]);
-            string path = ("\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "Copy." + pathArr[1]);
+           string  path = ("\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "Copy." + pathArr[1]);
             File.Copy(f, path);
             //
             FileInfo fi = new FileInfo(f);
-
-
-
             //Report file
             File.AppendAllText($"{ReportPath}", "Path" + Environment.NewLine);
             File.AppendAllText($"{ReportPath}", $"{f}" + Environment.NewLine);
             File.AppendAllText($"{ReportPath}", "Size" + Environment.NewLine);
             File.AppendAllText($"{ReportPath}", $"{fi.Length}" + Environment.NewLine);
-
             File.AppendAllText($"{ReportPath}", "Text" + Environment.NewLine);
             //
             return path;
@@ -72,31 +67,10 @@ namespace System_Task1
 
                                data = sr.ReadToEnd();
                             }
-                            //        string  fileName = Path.GetFileName(f);
-                            //          string[] pathArr = fileName.Split('.');
-
-                            //  //---------------
-
-                            //  //Crearte copy file 
-                            //  File.Copy(f, "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\"+$"{pathArr[0]}"+ DateTime.Now.ToString("ff")+"."+pathArr[1]);
-                              //        string path= ("\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "Copy." + pathArr[1]);
-                            //          File.Copy(f, path);
-                            //  //
-                            //  FileInfo fi = new FileInfo(f);
 
 
-
-                            //  //Report file
-                            // File.AppendAllText($"{ReportPath}", "Path" + Environment.NewLine);
-                            //File.AppendAllText($"{ReportPath}", $"{f}" + Environment.NewLine);
-                            //  File.AppendAllText($"{ReportPath}", "Size" + Environment.NewLine);
-                            //  File.AppendAllText($"{ReportPath}", $"{fi.Length}" + Environment.NewLine);
-
-                            //  File.AppendAllText($"{ReportPath}", "Text" + Environment.NewLine);
-                            //  //
-
-                          string path= ReportFile(f);
-
+                            //Task task = Task.Run(() => ReportFile(f));
+                            string path = ReportFile(f);
                             //Copy Words
                             foreach (var item in list)
                             {
@@ -119,7 +93,6 @@ namespace System_Task1
             }
             catch (System.Exception excpt)
             {
-                //    Console.WriteLine(excpt.Message);
               MessageBox.Show("Excpt"+excpt.Message);
             }
         }
@@ -145,7 +118,9 @@ namespace System_Task1
                 {
                     List.Add(Name);
                 }
-                DirSearch("C:\\Users\\Must_xm12\\Downloads", List);
+                Task task = new Task(() => DirSearch("C:\\Users\\Must_xm12\\source\\repos\\System_Task16\\System_Task1", List));
+                task.Start();
+                //DirSearch("C:\\Users\\Must_xm12\\source\\repos\\System_Task16\\System_Task1", List);
             }
         }
     }
