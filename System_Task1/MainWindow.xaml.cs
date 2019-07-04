@@ -22,15 +22,16 @@ namespace System_Task1
     /// </summary>
     public partial class MainWindow : Window
     {
-
+            
       public static  string ReportFile(string f)
         {
-            string ReportPath = "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\ReportFile.txt";
+            
+            string ReportPath = "C:\\Users\\User\\Desktop\\Copy\\ReportFile.txt";
 
             string fileName = Path.GetFileName(f);
             string[] pathArr = fileName.Split('.');
-            File.Copy(f, "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "." + pathArr[1]);
-           string  path = ("\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "Copy." + pathArr[1]);
+            File.Copy(f, "C:\\Users\\User\\Desktop\\Copy\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "." + pathArr[1]);
+           string  path = ("C:\\Users\\User\\Desktop\\Copy\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "Copy." + pathArr[1]);
             File.Copy(f, path);
             //
             FileInfo fi = new FileInfo(f);
@@ -44,11 +45,12 @@ namespace System_Task1
             return path;
         }
 
-
+        
+        Dictionary<string, int> keyValuePairs;
 
         static void DirSearch(string sDir,List<string> list)
         {
-            string ReportPath= "\\\\STHQ01DC01\\dfr$\\Must_xm12\\Desktop\\ReportFile.txt";
+            string ReportPath= "C:\\Users\\User\\Desktop\\Copy\\ReportFile.txt";
             string data = String.Empty;
             try
             {
@@ -70,14 +72,50 @@ namespace System_Task1
 
 
                             //Task task = Task.Run(() => ReportFile(f));
-                            string path = ReportFile(f);
+                            // string path = ReportFile(f);
+
+                            string fileName = Path.GetFileName(f);
+                            string[] pathArr = fileName.Split('.');
+                            File.Copy(f, "C:\\Users\\User\\Desktop\\Copy\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "." + pathArr[1]);
+                            string path = ("C:\\Users\\User\\Desktop\\Copy\\" + $"{pathArr[0]}" + DateTime.Now.ToString("ff") + "Copy." + pathArr[1]);
+                            File.Copy(f, path);
+                            //
+                            FileInfo fi = new FileInfo(f);
+                            //Report file
+                            File.AppendAllText($"{ReportPath}", "Path" + Environment.NewLine);
+                            File.AppendAllText($"{ReportPath}", $"{f}" + Environment.NewLine);
+                            File.AppendAllText($"{ReportPath}", "Size" + Environment.NewLine);
+                            File.AppendAllText($"{ReportPath}", $"{fi.Length}" + Environment.NewLine);
+                            File.AppendAllText($"{ReportPath}", "Text" + Environment.NewLine);
                             //Copy Words
                             foreach (var item in list)
                             {
                             var hasWord = data.Contains(item);
                             if (hasWord)
                             {
+                                    
+                                    if(App.keyValuePairs.Count!=0)
+                                    {
+                                        var Value = App.keyValuePairs.Where(pair => pair.Key == item)
+                                      .Select(pair => pair.Value)
+                                        .FirstOrDefault();
+                                        if(Value!=0)
+                                        {
+                                            App.keyValuePairs[item] +=1;
+                                        }
+                                        else
+                                        {
+                                            App.keyValuePairs.Add(item, 1);
 
+                                        }
+
+
+                                    }
+                                    else
+                                    {
+                                            App.keyValuePairs.Add(item, 1);
+
+                                    }
                                     File.AppendAllText($"{ReportPath}", $"{item}" + Environment.NewLine);
                                     string text = File.ReadAllText(path);
                                     text = text.Replace($"{item}", $"**{item}**");
@@ -90,10 +128,17 @@ namespace System_Task1
                     }
                     DirSearch(d,list);
                 }
+
             }
             catch (System.Exception excpt)
             {
               MessageBox.Show("Excpt"+excpt.Message);
+            }
+            File.AppendAllText($"{ReportPath}", $"***********" + Environment.NewLine);
+            var ordered = App.keyValuePairs.OrderBy(x => x.Value);
+            foreach (var item in App.keyValuePairs)
+            {
+                File.AppendAllText($"{ReportPath}", $"{item}" + Environment.NewLine);
             }
         }
 
@@ -107,6 +152,7 @@ namespace System_Task1
 
         private void Ellipse_Drop(object sender, DragEventArgs e)
         {
+           
         Ellipse ellipse = (sender as Ellipse);
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -118,9 +164,9 @@ namespace System_Task1
                 {
                     List.Add(Name);
                 }
-                Task task = new Task(() => DirSearch("C:\\Users\\Must_xm12\\source\\repos\\System_Task16\\System_Task1", List));
-                task.Start();
-                //DirSearch("C:\\Users\\Must_xm12\\source\\repos\\System_Task16\\System_Task1", List);
+                //Task task = new Task(() => DirSearch("C:\\Users\\User\\Desktop\\Find", List));
+                //task.Start();
+                DirSearch("C:\\Users\\User\\Desktop\\Find", List);
             }
         }
     }

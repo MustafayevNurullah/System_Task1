@@ -11,7 +11,13 @@ namespace System_Task1
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public  partial  class App : Application
     {
+        public static
+        Dictionary<string, int> keyValuePairs;
+        public App()
+        {
+            keyValuePairs = new Dictionary<string, int>();            
+        }
     }
 }
